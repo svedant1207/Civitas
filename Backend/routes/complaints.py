@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
-from app import db
-from models import Complaint, User
+from extensions import db
+from models import Complaint
 
 # Created a Blueprint instance for complaints.
 complaints_bp = Blueprint('complaints', __name__)
