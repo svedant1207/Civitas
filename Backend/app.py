@@ -1,18 +1,29 @@
 from flask import Flask
 from extensions import db
+from flask_wtf.csrf import CSRFProtect
+
+csrf = CSRFProtect()
 
 
 def create_app():
-    """Creates and configures the Flask application."""
+    """Creates and- configures the Flask application."""
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = 'wow'
 
     # Initialize extensions with the app
     db.init_app(app)
+    csrf.init_app(app)
 
-    # --- Import and register Blueprints inside the factory ---
+    # --- THE FIX ---
+    # 1. First, import the blueprint so the variable exists.
     from routes.complaints import complaints_bp
+
+    # 2. Now that 'complaints_bp' exists, you can exempt it.
+    csrf.exempt(complaints_bp)
+
+    # 3. Finally, register the blueprint with the app.
     app.register_blueprint(complaints_bp, url_prefix='/api/complaints')
 
     @app.route('/')
