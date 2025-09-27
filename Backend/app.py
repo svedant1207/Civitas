@@ -1,27 +1,36 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from extensions import db
 
-# Initialize Flask
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the database object
-db = SQLAlchemy(app)
+def create_app():
+    """Creates and configures the Flask application."""
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from routes.complaints import complaints_bp
-app.register_blueprint(complaints_bp, url_prefix='/api/complaints')
+    # Initialize extensions with the app
+    db.init_app(app)
 
-# --- OLD CODE KEPT FOR REFERENCE ---
-@app.route('/')
-def home():
-    return '<h1>Backend is running!</h1>'
+    # --- Import and register Blueprints inside the factory ---
+    from routes.complaints import complaints_bp
+    app.register_blueprint(complaints_bp, url_prefix='/api/complaints')
 
+    @app.route('/')
+    def home():
+        return '<h1>Backend is running!</h1>'
+
+    return app
+
+
+# This block only runs when you execute "python app.py" directly
 if __name__ == '__main__':
-    # Import all models to register them with SQLAlchemy
-    from models import User, Role, Property, Vehicle, Complaint
+    app = create_app()
 
+    # The app context is needed to run db.create_all()
     with app.app_context():
+        # We import the models here right before we need them
+        from models import User, Role, Property, Vehicle, Complaint
+
         db.create_all()
         print("Database tables created or already exist.")
 
