@@ -2,12 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>my-react-app</title>
+    <title>Civitas</title>
+
+    <!-- 1. Load Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- 2. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 3. Configure Tailwind to use the Inter font -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              // This makes 'font-inter' a valid class
+              inter: ['"Inter"', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+    <!-- 4. Add a base style for the app -->
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
   </head>
-  <body>
+  <body class="bg-gray-50">
+    <!-- This is where your React app gets attached -->
     <div id="root"></div>
+    <!-- This script loads your React application -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+

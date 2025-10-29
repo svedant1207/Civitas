@@ -95,6 +95,20 @@ def seed_data():
                 complainant_id=random.choice([u.id for u in users])
             ))
 
+        print("Creating notices...")
+        notices = []
+        admin_user = next((u for u in users if u.role_id == 1), users[0])  # Find an admin, or default to first user
+
+        for _ in range(5):  # Create 5 notices
+            notices.append(Notice(
+                title=fake.sentence(nb_words=6),
+                body=fake.paragraph(nb_sentences=5),
+                author_id=admin_user.id
+            ))
+
+        db.session.add_all(notices)
+        print(f"Created {len(notices)} notices.")
+
         db.session.add_all(properties)
         db.session.add_all(vehicles)
         db.session.add_all(complaints)
